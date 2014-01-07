@@ -1,3 +1,6 @@
-A LaTeX cheatsheet template, copy-pasted from [tex.stackexchange][1]
+A LaTeX cheatsheet for the course [Probabilistic Artificial Intelligence][1] in the 2013 autumn semester with Prof. A. Krause.
 
-[1]: http://tex.stackexchange.com/a/8915
+Based on my LaTeX cheatsheet [template][2]
+
+[1]: http://las.ethz.ch/courses/pai-f13/
+[2]: https://github.com/JamesGuthrie/cheatsheet

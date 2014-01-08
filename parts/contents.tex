@@ -123,9 +123,91 @@ Given admissable $h_a$, $h_b$, $h(n) = \max(h_a(n), h_b(n))$ is admissable: domi
 
 Admissibility specifies: $h(n) \leq h^*(n)$, ideally we would use $h(n) = h^*(n)$ - not feasible. Instead we get lower bound by relaxing constraints.
 
-\section{Section 2}
-Text 2
+\section{Propositional logic}
 
+\paragraph{Entailment} $\alpha \models \beta$ says if $\alpha$ true then $\beta$ also true
+\paragraph{Soundness} An inference algorithm that derives only entailed sentences is called sound or truth-preserving
+\paragraph{Completeness} An inference algorithm is complete if it can derive any entailed sentence
+
+\subsection{Syntax}
+\begin{tabular}{l l l}
+Proposition Symbol	& $P$				& $Q, R, W_{1,3}, ...$ \\
+Negation			& $\lnot$			& $\lnot W_{1,3}$ \\
+Conjunction			& $\wedge$			& $P \wedge Q$ \\
+Disjunction			& $\lor$			& $P \lor Q$ \\
+Implication			& $\Rightarrow$		& $P \wedge Q \Rightarrow R$ \\
+Biconditional		& $\Leftrightarrow$	& $P \wedge Q \Leftrightarrow R$ \\
+\end{tabular}
+
+\subsection{Backus Naur Form}
+\begin{tabular}{l c l}
+Sentence		& $\rightarrow$	& AtomicSentence \\
+				&				& | ComplexSentence \\
+AtomicSentence	& $\rightarrow$	& True | False | Symbol \\
+Symbol			& $\rightarrow$	& P | Q | R | \dots \\
+ComplexSentence & $\rightarrow$	& $\lnot$Sentence \\
+				&				& | (Sentence $\land$ Sentence) \\
+\end{tabular}
+\paragraph{Precedence} $\lnot, \land, \lor, \Rightarrow, \Leftrightarrow$
+
+\subsection{Somthing smart here}
+
+$\alpha \Leftrightarrow \beta$ iff $\alpha \models \beta$ and $\beta \models \alpha$
+
+\paragraph{Deduction theorem} for sentences $\alpha$ and $\beta$, $\alpha \models \beta$ iff. $\alpha \Rightarrow \beta$
+\paragraph{Satisfiability of sentence} $\Rightarrow$ true in some model
+\paragraph{Proof by contradiction} $\alpha \models \beta$ iff. $(\alpha \land \lnot \beta)$ unsatisfiable
+\paragraph{Modus ponens}
+$\frac{\alpha_1, \alpha_2, \dots, \alpha_k \;\; \alpha_1 \land \alpha_2 \land \dots \land \alpha_k \Rightarrow \beta}{\beta}$ or more simply: if $\alpha \Rightarrow \beta$ and $\alpha$ then $\beta$
+\paragraph{Unit resolution}
+
+$\frac{\ell_1 \lor \dots \lor \ell_k, m}{\ell_1 \lor \dots \lor \ell_{i-1} \lor \ell_{i+1} \lor \dots \lor \ell_{k}}$, where $\ell_i$ and $m$ are negation of one another \\
+example: $(P \lor Q) \land (\lnot P \lor R) = (Q \lor R)$
+
+\subsection{Conjunctive normal form}
+$\ell_{1,1} \lor \dots \lor \ell_{1,k} \land \dots \land (\ell_{n,1} \lor \dots \lor \ell_{n,k})$
+
+\paragraph{Recipe for CNF}
+\begin{enumerate}
+\item eliminate "$\Leftrightarrow$": $\alpha \Leftrightarrow \beta \rightarrow (\alpha \Rightarrow \beta) \land (\beta \Rightarrow \alpha)$
+\item eliminate "$\Rightarrow$": $\alpha \Rightarrow \beta \rightarrow \lnot \alpha \lor \beta$
+\item move $\lnot$ inwards:
+	\begin{itemize}
+	\item $\lnot(\lnot \alpha) \equiv \alpha$
+	\item $\lnot(\alpha \land \beta) \equiv (\lnot \alpha \lor \lnot \beta)$
+	\item $\lnot(\alpha \lor \beta) \equiv (\lnot \alpha \land \lnot \beta)$
+	\end{itemize}
+\end{enumerate}
+
+\subsection{Resolution Algorithm}
+
+Inference based on resolution uses proof by contradiction to show $KB \models \alpha$ we show $KB \land \lnot \alpha$ unsatisfiable.
+
+\begin{enumerate}
+\item Convert $KB \land \lnot \alpha$ to CNF
+\item Apply reolution to resulting clauses
+\end{enumerate}
+
+Eventually either no new clauses can be added $\Rightarrow$ $KB \not\models \alpha$ or two clauses resolve to yield empty clause $\Rightarrow$ $KB \models \alpha$
+
+\section{First Order Logic}
+\subsection{Syntax}
+\begin{tabular}{l l l}
+Sentence		& $\rightarrow$	& AtomicSentence |\\
+				&				& (Sentence Connective Sentence) |\\
+				&				& Quantifier, Variable, ... Sentence |\\
+				&				& Sentence \\
+AtomicSentence	& $\rightarrow$	& Predicate(Term,...) |\\
+				&				& Term = Term \\
+Term			& $\rightarrow$	& Function(Term) | Constant |\\
+				&				& Variable \\
+Connective		& $\rightarrow$	& $\Rightarrow$ | $\land$ | $\lor$ | $\Leftrightarrow$ \\
+Quantifier		& $\rightarrow$	& $\forall$ | $\exists$ \\
+Constant		& $\rightarrow$	& $A$ | $X_1$ | John | \dots \\
+Variable		& $\rightarrow$	& $a$ | $x$ | $s$ | \dots \\
+Predicate		& $\rightarrow$	& Before | HasColor | \dots \\
+Function		& $\rightarrow$	& Mother | LeftLeg | \dots \\
+\end{tabular}
 \section{Section 3}
 Etc.
 

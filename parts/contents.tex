@@ -9,13 +9,119 @@
 \setlength{\columnsep}{2pt}
 
 \begin{center}
-     \Large{\underline{Title}} \\
+     \Large{\underline{Probabilistic AI}} \\
 \end{center}
 
-\section{Section 1}
-Text
-\subsection{xCode}
-Subsetction text
+\section{Search}
+\subsection{Well-defined problem}
+Formally defined by four components:
+\paragraph{Initial State} The state that the agent starts in.
+\paragraph{Sucessor Function} Actions available to agent.
+\paragraph{Goal Test} Determines whether agent in goal state.
+\paragraph{Path Cost} Fn assigns a numeric cost to each path.
+
+\subsection{Tree Search}
+\textbf{function} TREE-SEARCH (\textit{problem, strategy}) \textbf{returns} a solution, or failure\\
+initialize search tree using initial state of \textit{problem}\\
+\textbf{loop do}\\
+    \textbf{if} no candidates for expansion \textbf{then}\\
+        \textbf{return} failure\\
+    choose leaf node for expansion according to \textit{strategy}\\
+    \textbf{if} the node contains a goal state \textbf{then}\\
+        \textbf{return} corresponding solution\\
+    \textbf{else} expand node and add the resulting nodes to the search tree
+
+\subsection{Measuring performance}
+Performance can be measured according to the following four criteria
+\paragraph{Completeness} Is algorithm guaranteed to find solution if present
+\paragraph{Optimality} Does strategy find the optimal solution
+\paragraph{Time complexity} How long taken to find solution
+\paragraph{Space complexity} How much memory to perform search
+
+\subsubsection{Measures of problem difficulty}
+\textbf{Branching factor} $b$: max. no. of successors to a node, \textbf{depth} $d$ of the shallowest goal node, $m$ maximum length of any path in state space.
+
+\subsection{Breadth-First Search}
+
+Root node expanded first, then all successors of root, then their successors etc.
+
+BFS is complete, but not necessarily optimal (only optimal if path cost nondecreasing function of node depth). Time complexity is in the worst case $b + b^2 + \dots + (b^{d+1} - b) = O(b^{d+1})$. Space complexity is proportional to time complexity as every node must remain in memory (it is either part of fringe or anscestor).
+
+\subsubsection{Uniform cost search}
+
+Variant of BFS in which node with lowest path cost is expanded, not shallowest node.
+
+Completeness only guaranteed if every node has at least cost $\epsilon$, in which case optimality is also guaranteed (path cost increases). Time and space costs are both $O(b^{1+[C^*/\epsilon]})$, where $C^*$ cost of the optimal solution and every action costs at least $\epsilon$.
+
+\subsection{Depth-First Search}
+
+Deepest node in current fringe always expanded first.
+
+DFS is neither complete nor optimal - incomplete because it could get "stuck" going down unbounded tree, not optimal as it may find a solution at a deeper depth than the optimal solution. Worst-case time complexity potentially unbounded, otherwise similar to BFS.
+Space complexity reduced as only $bm + 1 = O(bm)$ nodes need to be stored.
+
+\subsubsection{Backtracking search}
+
+Only uses $O(m)$ space, only expands one child of fringe node.
+
+\subsection{Iterative Deepening DFS}
+
+IDFS limits maximimum depth to be expanded to a given limit. Limit increased per full tree expansion.
+
+IDFS is complete for finite branching factor and optimal if path cost nondecreasing function of node depth. Time complexity is $db + (d-1)b + \dots + (1)b^d = O(b^d)$. Space complexity is $O(bd)$ (like DFS).
+
+\subsection{Bidirectional Search}
+
+Run search simltaneously from start to goal and from goal to start, reduces complexity from $b^d$ to $2b^{d/2}$. Requires knowing a goal node, and how to construct tree with goal node as root. Time complexity is $O(b^{d/2}$, as is the space complexity (drawback of bidirectional search).
+
+\subsection{Graph Search}
+
+Like tree search but stores list of already expanded nodes.
+
+\textbf{function} GRAPH-SEARCH (\textit{problem, fringe}) returns a solution, or failure\\
+\textit{closed} $\leftarrow$ an empty set\\
+\textit{fringe} $\leftarrow$ INSERT(MAKE-NODE(INITIAL-STATE[\textit{problem]}, \textit{fringe})\\
+\textbf{loop do}\\
+\textbf{if} EMPTY?(\textit{fringe}) \textbf{then}\\
+    \textbf{return} failure\\
+\textit{node} $\leftarrow$ REMOVE-FIRST(\textit{fringe})\\
+\textbf{if} GOAL-TEST[\textit{problem}]STATE[node] \textbf{then}\\
+    \textbf{return} SOLUTION(node)\\
+\textbf{if} STATE[\textit{node}] is not in \textit{closed} \textbf{then}\\
+    add STATE[\textit{node}] to closed\\
+    \textit{fringe} $\leftarrow$ INSERT-ALL(EXPAND(node, \textit{problem}), \textit{fringe})\\
+
+\subsection{Best-first Search}
+
+Heuristic function $h(n)$ is estimated cost of cheapest path from node $n$ to goal.
+
+\subsection{A* Search}
+
+Best-first search which combines $g(n)$, the cost to reach a node with $h(n)$ the cost to get from the node to the goal: $f(n) = g(n) + h(n)$.
+
+Using \textbf{tree-search}, A* is optimal if $h(n)$ an admissable heuristic i.e. $h(n)$ doesn't overestimate the actual cost.
+
+Using \textbf{graph-search} admissibility doesn't suffice, we need \textbf{consistency} (also \textbf{monotonicity}).
+
+$h(n)$ is consistent if, for every node $n$ and every successor $n'$ of $n$ generated by any action $a$, the estimated cost of reaching the goal from $n$ is no greater than the step cost of getting to $n'$ plus the estimated cost of reaching the goal from $n'$: $h(n) \leq c(n, a, n') + h(n')$. Consistency of $h(n)$ implies admissibility and nondecreasing $h(n)$ hence the first node selected by consistent graph-search is optimal.
+
+Time and space complexity $O(b^d)$ resp. $O(b^{C*/\epsilon})$ worst-case, often better.
+
+\subsection{IDA* Search}
+
+Iteratively increase maximum $f$-cost ($f(n) = g(n)+h(n)$).
+
+\subsection{Heuristic functions}
+
+\subsubsection{Dominance}
+
+If $h_1$ and $h_2$ admissable and $\forall n \; h_2(n) \geq h_1(n)$ then $h_2$ dominates $h_1$ hence better for search.
+
+Given admissable $h_a$, $h_b$, $h(n) = \max(h_a(n), h_b(n))$ is admissable: dominates $h_a$ and $h_b$.
+
+\subsubsection{Developing heuristics}
+
+Admissibility specifies: $h(n) \leq h^*(n)$, ideally we would use $h(n) = h^*(n)$ - not feasible. Instead we get lower bound by relaxing constraints.
 
 \section{Section 2}
 Text 2

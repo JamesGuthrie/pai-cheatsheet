@@ -208,13 +208,63 @@ Variable		& $\rightarrow$	& $a$ | $x$ | $s$ | \dots \\
 Predicate		& $\rightarrow$	& Before | HasColor | \dots \\
 Function		& $\rightarrow$	& Mother | LeftLeg | \dots \\
 \end{tabular}
-\section{Section 3}
-Etc.
 
-% You can even have references
-\rule{0.3\linewidth}{0.25pt}
-\scriptsize
-\bibliographystyle{abstract}
-\bibliography{refFile}
+\section{Probabilities}
+
+\subsection{Axioms}
+\begin{enumerate}
+\item $0 \geq P(a) \leq 1$
+\item $P(true) = 1$, $P(false) = 0$
+\item $P(a \lor b) = P(a) + P(b) - P(a \land b)$
+\end{enumerate}
+
+\subsection{Conditional Probability}
+$P(a|b) = \frac{P(a \land b)}{P(b)} \equiv P(a \land b) = P(a|b)P(b) \equiv P(a \land b) = P(b|a)P(a)$
+
+Probability of a proposition is equal to sum of probablilities of atomic events in which it holds ($a(a)$).
+$P(a) = \sum_{e_i \in e(a)}{P(e_i)}$
+
+\paragraph{Marginalisation} summing out the variables which one is not interested in to obtain unconditional probability: $P(Y) = \sum_z P(Y,z)$
+
+\paragraph{Conditioning} marginalisation with conditional probabilities: $P(Y) = \sum_z P(Y|z)P(z)$
+
+\paragraph{Normalisation} with $X$ the query variable (cavity), $E$ set of evidence variables (Toothache), $e$ observed values, $Y$ unobserved variables (catch): $P(X|e) = \alpha P(X,e) = \alpha \sum_y P(X,e,y)$
+
+\paragraph{Independence} between propositions $a$, $b$ expressed as $a \bot b \Rightarrow P(a|b) = P(a)$ or $P(b|a) = P(b)$ or $P(a \land b) = P(a)P(b)$
+
+\paragraph{Bayes' Rule} $P(b|a) = \frac{P(a|b)P(b)}{P(a)}$ \\
+with normalisation: $P(Y|X) = \alpha P(X|Y)P(Y)$, $\alpha$ such that entries $P(Y|X)$ sum to 1
+
+\paragraph{Conditional Independence} of $X$ and $Y$ given $Z$\\
+$P(X,Y|Z) = P(X|Z) P(Y|Z)$\\
+$P(X|Y,Z) = P(X|Z)$ and $P(Y|X,Z) = P(Y|Z)$
+
+\section{Probabilistic reasoning over time}
+
+\subsection{Markov models}
+Assume that current state dependent on subset of prior states (first-oder on previous)
+\paragraph{First-order} $P(X_t|X_{0:t-1}) = P(X_t,|X_{t-1})$
+\paragraph{Second-order} $P(X_t|X_{0:t-1}) = P(X_t,|X_{t-2},X_{t-1})$
+\paragraph{Sensor assumption} $P(E_t|X_{0:t},E_{0:t-1}) = P(E_t, X_t)$
+\paragraph{Complete joint distribution}
+$P(X_{0:t},E_{1:t}) = P(X_0) \prod\limits_{i=1}^t P(X_i|X_i-1)P(E_i|X_i)$
+\subsection{Inference in Temporal models}
+\paragraph{Filtering} computation of the \textbf{belief state}, also called state estimation. Wish to compute $P(X_t|e_{1:t})$
+\paragraph{Prediction} computation of posterior distribution over future state. $P(X_{t+k}|e_{1:t}) \; , \; k>0$ \\
+$P(X_{t+1}|e_{1:t+1}) = \alpha P(e_{t+1}|X_{t+1}) \sum\limits_{x_t}P(X_{t+1}|x_t)P(x_t|e_{1:t})$ \\
+$P(X_{t+k+1}|e_{1:t}) = \sum\limits_{x_{t+k}}P(X_{t+k+1}|x_{t+k})P(x_{t+k}|e_{1:t})$
+\paragraph{Smoothing} computation of posterior distribution over past state. $\bm{P}(\bm{X}_k|\bm{e}_{1:t}) \; , \; 0 \leq k < t$ \\
+$\bm{P}(\bm{X}_k|\bm{e}_{1:t}) = \alpha \bm{P}(\bm{X}_k|\bm{e}_{1:k})\bm{P}(\bm{e}_{k+1:t}|\bm{X}_k)$ \\
+$\bm{P}(\bm{e}_{k+1:t}|\bm{X}_k) = \sum\limits_{\bm{x}_{k+1}}P(\bm{e}_{k+1}|\bm{x}_{k+1})P(\bm{e}_{k+2:t},\bm{x}_{k+1})\bm{P}(\bm{x}_{k+1}|\bm{X}_k)$
+\paragraph{Most likely explanation} sequence of states most likely to have generated given observations $e_{1:t}$. $\arg\!\max_{x_{1:t}} P(X_{1:t}|e_{1:t})$ \\
+Viterbi algorithm: $\max_{x_{1:t}} \bm{P}(\bm{x}_{1:t},\bm{X}_{1+t}|\bm{e}_{1:t+1}) = \alpha \bm{P}(\bm{e}_{t+1}|\bm{X}_{t+1})\max\limits_{\bm{x}_t}\left(\bm{P}(\bm{X}_{t+1}|\bm{x}_t) \max\limits_{\bm{x}_{1:t-1}} P(\bm{x}_{1:t} | \bm{e}_{1:t}) \right)$
+\paragraph{Learning} transition and sensor models can be learned from observations.
+
+\subsection{Kalman Filters}
+TBD
+
+\subsection{Dynamic Bayesian Networks}
+
+TBD
 
 \end{multicols}

@@ -267,4 +267,56 @@ TBD
 
 TBD
 
+\section{Markov Decision Processes}
+Are sequential decision problems for fully observable, stochastic environments with Markovian transition models consisting of a set of states $X = \left\{1,\dots,n\right\}$, a set of actions in each state $A = \left\{a,\dots,m\right\}$, a transition model $P(x'|x,a)$ and a reward function $r(x,a)$.
+
+\paragraph{Policy} $\pi$ specifies actions for any state, action given by $\pi(x)$. Policy measured by expected utility.
+
+\paragraph{Optimal Policy} $\pi^*$ yields highest expected utility.
+
+\paragraph{Proper Policy} guaranteed to reach a terminal state.
+
+\subsection{Time Horizon}
+\paragraph{Finite horizon} after fixed time ($N$) game over, nothing matters. Optimal policy \textbf{nonstationary}.
+\paragraph{Infinite horizon} no fixed time limit on actions. Optimal policy \textbf{stationary}.
+
+\subsection{Rewards}
+\paragraph{Additive rewards} $U_h([x_0,x_1,x_2,\dots]) = R(x_0) + R(x_1) + R(x_2) + \dots$
+\paragraph{Discounted rewards} $U_h([x_0,x_1,x_2, \dots]) = R(x_0) + \gamma R(x_1) + \gamma^2 R(x_2) + \dots$
+\paragraph{Discount factor} $0 < \gamma < 1$
+
+\subsection{Planning}
+\paragraph{Deterministic policy} induces Markov chain with transition probabilities $P(X_{t+1} = x'  X_t = x) = P(x'|x,\pi(x))$
+\paragraph{Expected value} $J(\pi) = E[r(X_0,\pi(X_0)) + \gamma r(X_1, \pi(X_1))] + \gamma^2 r(X_2, \pi(X_2)) + \dots$
+
+\subsection{Value Function}
+$V^{\pi}(x) = J(\pi | X_0 = x) = E\left[\sum\limits_{t=0}^{\infty} \gamma^tr(X_t,\pi(X_t)) | X_0 = x\right]$
+
+\subsection{Optimal Policy}
+\paragraph{Expected utility} by executing $\pi$ starting in $x$ $U^\pi(x) = E \left[ \sum\limits_{t=0}^{\infty} \gamma^tR(x_t) \right]$
+\paragraph{Optimal policy} $\pi^*_x = \arg\!\max\limits_\pi U^\pi(x)$
+
+\subsection{Bellman Equation}
+\paragraph{Theorem:} Every value function induces a policy, every policy induces a value function.
+Policy optimal $\Leftrightarrow$ greedy w.r.t its induced value function.
+$V^*(x) = \max\limits_{a}\left[r(x,a) + \gamma \sum\limits_{x'}P(x', x,a) V^*(x')\right]$
+
+\subsection{Policy Iteration}
+Start with random policy $\pi$. Until converged: Compute value function $V^{\pi}(x)$, Compute greedy policy $\pi_G$ w.r.t. $V_{\pi}$, Set $\pi \leftarrow \pi_G$.
+$V^{\pi}(x) = r(x, a) + \gamma \sum\limits_{x'} P(x'|x,\pi_i(x))V^{\pi}(x')$
+\subsection{Value Iteration}
+\paragraph{Solve Bellman equation} $V_t(x) = \max\limits_a r(x,a) + \gamma \sum\limits_{x}P(x'|x,a)V_{t-1}(x)$
+With $V_0(x) = \max\limits_a r(x,a)$.
+
+Iterate until $|V_t - V_{t-1}| < \epsilon$
+Guaranteed to converge to $\epsilon$-optimal policy
+
+\subsection{Partially-Observable MDPs}
+\paragraph{Key idea:} Given current belief $P(X_t|\bm{y_{1:t}})$, next belief $P(X_{t+1}|\bm{y_{1:t+1}})$ deterministic function of $y_{t+1}$. Allows POMDPs to be modeled as MDP (MDP states are POMDP beliefs).
+\paragraph{Observation probablility} $P(Y_t|b_t) = \sum\limits_{x=1}^nP(Y_t | X_t = x)b_t(x)$
+\paragraph{Transitions:} given $b_t, y_t, a_t$: $b_{t+1}(x') = \sum\limits_x b_t(x|y_t)P(X_{t+1} = x' | X_t = x,a_t)$
+\paragraph{Solving POMDPs:} For finite horizon T, set of reachable belief states finite (albeit exponential in T), can calculate optimal action using dynamic programming.
+\paragraph{Approximate solutions:} discretise belief space by sampling (as most belief states never reached) or policy gradient.
+\paragraph{Policy gradient:} Assume parametric policy $\pi(b) = \pi(b;\theta)$, for each parameter $\theta$ the policy induces a Markov chain, can compute expected reward $J(\theta)$ by sampling, find optimal parameters through search (gradient ascent) $\theta^* = \arg\max\limits_{\theta} J(\theta)$
+
 \end{multicols}

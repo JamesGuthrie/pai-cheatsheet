@@ -233,7 +233,7 @@ $P(a) = \sum_{e_i \in e(a)}{P(e_i)}$
 \paragraph{Independence} between propositions $a$, $b$ expressed as $a \bot b \Rightarrow P(a|b) = P(a)$ or $P(b|a) = P(b)$ or $P(a \land b) = P(a)P(b)$
 
 \paragraph{Bayes' Rule} $P(b|a) = \frac{P(a|b)P(b)}{P(a)}$ \\
-with normalisation: $P(Y|X) = \alpha P(X|Y)P(Y)$, $\alpha$ such that entries $P(Y|X)$ sum to 1
+with normalisation: $P(Y|X) = \alpha P(X|Y)P(Y)$, $\alpha$ such that entries $P(Y|X)$ and $P(\lnot Y|X)$ sum to 1
 
 \paragraph{Conditional Independence} of $X$ and $Y$ given $Z$\\
 $P(X,Y|Z) = P(X|Z) P(Y|Z)$\\
@@ -293,17 +293,24 @@ Are sequential decision problems for fully observable, stochastic environments w
 $V^{\pi}(x) = J(\pi | X_0 = x) = E\left[\sum\limits_{t=0}^{\infty} \gamma^tr(X_t,\pi(X_t)) | X_0 = x\right]$
 
 \subsection{Optimal Policy}
-\paragraph{Expected utility} by executing $\pi$ starting in $x$ $U^\pi(x) = E \left[ \sum\limits_{t=0}^{\infty} \gamma^tR(x_t) \right]$
-\paragraph{Optimal policy} $\pi^*_x = \arg\!\max\limits_\pi U^\pi(x)$
+\paragraph{Expected utility} by executing $\pi$ starting in $x$ $V^\pi(x) = E \left[ \sum\limits_{t=0}^{\infty} \gamma^tR(x_t) \right]$
+\paragraph{Optimal policy} $\pi^*_x = \arg\!\max\limits_\pi V^\pi(x)$
 
 \subsection{Bellman Equation}
 \paragraph{Theorem:} Every value function induces a policy, every policy induces a value function.
 Policy optimal $\Leftrightarrow$ greedy w.r.t its induced value function.
-$V^*(x) = \max\limits_{a}\left[r(x,a) + \gamma \sum\limits_{x'}P(x', x,a) V^*(x')\right]$
+
+1. $V^*(x) = r(x) + \max\limits_{a}\left[\gamma \sum\limits_{x'}P(x'| x,a) V^*(x')\right]$
+
+2. $V^*(x) = \max\limits_{a} \left[r(x,a) + \sum\limits_{x'} \gamma (P(x'| x, a) V^*(x') \right]$
+
+3. $V^*(x) = \max\limits_{a} \sum\limits_{x'} (P(x'| x, a) \left[r(x,a,x') + \gamma V^*(x') \right]$
 
 \subsection{Policy Iteration}
-Start with random policy $\pi$. Until converged: Compute value function $V^{\pi}(x)$, Compute greedy policy $\pi_G$ w.r.t. $V_{\pi}$, Set $\pi \leftarrow \pi_G$.
-$V^{\pi}(x) = r(x, a) + \gamma \sum\limits_{x'} P(x'|x,\pi_i(x))V^{\pi}(x')$
+Start with random policy $\pi$. Until converged: Compute value function $V_i = V^{\pi_i}$, Compute greedy policy $\pi_G$ w.r.t. $V_{\pi}$, Set $\pi \leftarrow \pi_G$.
+$V^{\pi_i}(x) = r(x, a) + \gamma \sum\limits_{x'} P(x'|x,\pi_i(x))V^{\pi}(x')$
+
+$\pi^*(x) = \arg\max\limits_a \sum\limits_{x'} P(x'|x,a)V(x')$
 \subsection{Value Iteration}
 \paragraph{Solve Bellman equation} $V_t(x) = \max\limits_a r(x,a) + \gamma \sum\limits_{x}P(x'|x,a)V_{t-1}(x)$
 With $V_0(x) = \max\limits_a r(x,a)$.

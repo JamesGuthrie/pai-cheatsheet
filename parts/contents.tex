@@ -319,4 +319,24 @@ Guaranteed to converge to $\epsilon$-optimal policy
 \paragraph{Approximate solutions:} discretise belief space by sampling (as most belief states never reached) or policy gradient.
 \paragraph{Policy gradient:} Assume parametric policy $\pi(b) = \pi(b;\theta)$, for each parameter $\theta$ the policy induces a Markov chain, can compute expected reward $J(\theta)$ by sampling, find optimal parameters through search (gradient ascent) $\theta^* = \arg\max\limits_{\theta} J(\theta)$
 
+\section{Learning}
+\subsection{Bayesian Learning}
+Calculate probability of each hypothesis, given data where $D$ represents all data and $d$ an observed value: $P(h_i|d) = \alpha P(d|h_i)P(h_i)$
+Prediction of unknown quantity $X$: $P(X|d) = \sum\limits_i P(X|h_i)P(h_i|d)$
+\paragraph{Hypothesis prior:} $P(h_i)$
+\paragraph{Liklihood of data under hypothesis:} $P(d|h_i)$
+\paragraph{Maximum A Posteriori (MAP):} $h_i$ that maximises $P(h_i|d)$
+
+\paragraph{Maximum-liklihood parameter learning:} $P(d|h_{\theta}) = \prod\limits_{j=1}^{N}P(d_j|h_{\theta})$ taking log of both sides: $L(d|h_{\theta}) = \log P(d|h_{\theta}) = \sum\limits_{j=1}^{N} \log P(d_j|h_{\theta})$ Max-liklihood given by taking $\frac{dL(d|h_{\theta})}{d\theta} = 0$
+
+\paragraph{Naive bayes model} made up of root "class" variable $C$ and leaf attributes $X_i$. Assumes attributes conditionally independent.
+
+$\theta_{X_i|Pa_i} = \frac{Count(X_i,Pa_i)}{Count(Pa_i)}$
+
+$P(C|x_1,\dots,x_n) = \alpha P(C)\prod\limits_{i}P(x_i|C)$
+
+\paragraph{Parameter learning} supposing F bernoulli-distributed with unknown paramter $P(F=cherry) = \theta$, given training data $D={f^{(1)},\dots,f^{(N)}}$
+
+estimating $\theta$: $\hat{\theta} = \arg\max\limits_{\theta} P(D|\theta) = \arg\max\limits_{\theta} \prod\limits_{i=1}^{N}P(f^{(i)}|\theta)$
+
 \end{multicols}
